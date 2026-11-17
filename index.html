@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Board Report</title>
+<meta name="description" content="A 15 to 20 minute game: build a one-page security and privacy report for a board's audit committee, then answer the directors' questions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Same visual system as The 2AM Page, Keys to the Agent and Ship It? */
+:root{
+  --bg:#f3f1ee; --panel:#ffffff; --ink:#1c1a19; --muted:#6a6460; --line:#dcd6d0;
+  --red:#cc0000; --red-soft:#fbe6e6; --aqua:#00796b; --aqua-soft:#e2f2ef; --amber:#a35a00; --amber-soft:#fbefdc;
+  --good:#2e7d4f; --good-soft:#e3f2e8; --shadow:0 1px 0 rgba(0,0,0,.04);
+  --f-display:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#161413; --panel:#211e1c; --ink:#f1ece8; --muted:#a69d97; --line:#3a3532;
+  --red:#ff6b6b; --red-soft:#3a1f1f; --aqua:#4fc3b1; --aqua-soft:#16302c; --amber:#f0a94b; --amber-soft:#35281a;
+  --good:#6fcf97; --good-soft:#18301f; --shadow:none; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#161413; --panel:#211e1c; --ink:#f1ece8; --muted:#a69d97; --line:#3a3532;
+  --red:#ff6b6b; --red-soft:#3a1f1f; --aqua:#4fc3b1; --aqua-soft:#16302c; --amber:#f0a94b; --amber-soft:#35281a;
+  --good:#6fcf97; --good-soft:#18301f; --shadow:none; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
+.credit{margin-top:32px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.credit a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.1;text-wrap:balance;margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--aqua);outline-offset:2px}
+a{color:var(--aqua)}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--red);padding-bottom:10px;margin-bottom:22px}
+.brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.brand h1{font-size:28px;letter-spacing:.01em}
+.brand .eyebrow{color:var(--red)}
+.linkbtn{background:none;border:1px solid var(--line);border-radius:6px;padding:6px 12px;font-size:14px;color:var(--muted)}
+.linkbtn:hover{border-color:var(--ink);color:var(--ink)}
+.intro{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:start}
+.intro .lede{font-size:19px;max-width:60ch}
+.intro h2{font-size:44px;margin:6px 0 14px}
+.rules{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px;box-shadow:var(--shadow)}
+.rules ul{margin:8px 0 0;padding-left:18px}
+.rules li{margin:6px 0}
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:26px}
+.case{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;text-align:left}
+.case:hover{border-color:var(--ink)}
+.case h3{font-size:21px}
+.case p{margin:0;font-size:14px;color:var(--muted)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted);align-self:flex-start}
+.primary{background:var(--red);color:#fff;border:0;border-radius:8px;padding:13px 22px;font-weight:600;font-size:16px}
+.primary:hover{filter:brightness(1.08)}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:22px}
+.note{font-size:13px;color:var(--muted)}
+.game{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+.scene{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.scene-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line)}
+.clock{font-family:var(--f-mono);font-weight:600;font-size:15px;color:var(--red)}
+.step{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.scene-body{padding:20px 22px 24px}
+.scene-body h2{font-size:30px;margin-bottom:10px}
+.scene-body p{margin:0 0 12px;max-width:68ch}
+.inject{border-left:4px solid var(--ink);background:var(--bg);padding:10px 14px;border-radius:0 8px 8px 0;margin:4px 0 16px;font-size:15px}
+.inject .eyebrow{display:block;margin-bottom:2px}
+.outcome{border-radius:10px;padding:14px 16px;margin:4px 0 16px;border:1px solid var(--line)}
+.outcome.l0{background:var(--good-soft);border-color:var(--good)}
+.outcome.l1{background:var(--amber-soft);border-color:var(--amber)}
+.outcome.l2{background:var(--red-soft);border-color:var(--red)}
+.outcome .verdict{display:block;margin-bottom:4px}
+.l0 .verdict{color:var(--good)} .l1 .verdict{color:var(--amber)} .l2 .verdict{color:var(--red)}
+.outcome p{margin:0}
+.ask{font-weight:600;margin-top:4px!important}
+.choices{display:grid;gap:10px;margin-top:8px}
+.choice{display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px;align-items:start;text-align:left;background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px}
+.choice:hover{border-color:var(--ink)}
+.choice .k{font-family:var(--f-mono);font-weight:600;border:1px solid var(--line);border-radius:6px;text-align:center;padding:2px 0;color:var(--muted)}
+.choice[disabled]{cursor:default;opacity:.55}
+.choice.picked{opacity:1;border-color:var(--ink)}
+.result{margin-top:18px;border-radius:10px;padding:16px 18px;border:1px solid var(--line);background:var(--bg)}
+.result.best{background:var(--good-soft);border-color:var(--good)}
+.result.ok{background:var(--amber-soft);border-color:var(--amber)}
+.result.poor{background:var(--red-soft);border-color:var(--red)}
+.verdict{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.best .verdict{color:var(--good)} .ok .verdict{color:var(--amber)} .poor .verdict{color:var(--red)}
+.result p{margin:6px 0 0}
+.lesson{font-size:14px;color:var(--muted);margin-top:8px!important}
+.result .primary{margin-top:14px}
+.rail{display:grid;gap:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+.board{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+.board h3{font-size:18px;margin-bottom:10px}
+.co{font-weight:600}
+.co-sub{font-size:13px;color:var(--muted);margin-bottom:12px}
+.meter{margin:10px 0}
+.meter .lab{display:flex;justify-content:space-between;font-size:13px}
+.meter .lab b{font-family:var(--f-mono);font-weight:500;font-variant-numeric:tabular-nums}
+.meter .hint{font-size:11px;color:var(--muted)}
+.bar{height:8px;background:var(--bg);border-radius:99px;overflow:hidden;border:1px solid var(--line);margin-top:4px}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .5s ease}
+.legs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.leg{font-family:var(--f-mono);font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.leg.on{border-color:var(--red);color:var(--red);background:var(--red-soft)}
+.leg.half{border-color:var(--amber);color:var(--amber);background:var(--amber-soft)}
+.log{list-style:none;margin:0;padding:0;font-size:13px;max-height:320px;overflow:auto}
+.log li{display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px;padding:7px 0;border-top:1px dashed var(--line)}
+.log li:first-child{border-top:0}
+.log time{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.log .empty{display:block;color:var(--muted);font-style:italic}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.progress{display:flex;gap:4px;padding:10px 20px 14px;border-top:1px solid var(--line)}
+.progress span{flex:1;height:6px;border-radius:99px;background:var(--line)}
+.progress span.done{background:var(--ink)}
+.progress span.now{background:var(--red)}
+.progress span.live{outline:1px dashed var(--muted);outline-offset:1px}
+.end h2{font-size:40px;margin:6px 0 10px}
+.grid2{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat .n{font-family:var(--f-mono);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums}
+.stat .l{font-size:13px;color:var(--muted)}
+.trifecta{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:22px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+.trifecta svg{width:100%;height:auto}
+.trifecta svg text{font-family:var(--f-mono);font-size:11px;fill:var(--ink)}
+.debrief{display:grid;gap:10px;margin-top:10px}
+.dl{background:var(--panel);border:1px solid var(--line);border-left-width:5px;border-radius:8px;padding:12px 14px}
+.dl.best{border-left-color:var(--good)} .dl.ok{border-left-color:var(--amber)} .dl.poor{border-left-color:var(--red)}
+.dl .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted);font-family:var(--f-mono)}
+.dl p{margin:6px 0 0;font-size:15px}
+.real{background:var(--aqua-soft);border:1px solid var(--aqua);border-radius:10px;padding:16px 18px;margin-top:22px}
+.real h3{font-size:22px;color:var(--aqua);margin-bottom:6px}
+.real ul{margin:6px 0 0;padding-left:18px}
+.real li{margin:6px 0}
+.sec{margin-top:28px}
+.sec>h3{font-size:24px;margin-bottom:8px}
+@media (max-width:860px){.game,.intro,.trifecta{grid-template-columns:minmax(0,1fr)}.rail{position:static}.cases,.grid2{grid-template-columns:minmax(0,1fr)}.intro h2{font-size:34px}}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+@media print{
+  :root,:root[data-theme="dark"]{--bg:#ffffff;--panel:#ffffff;--ink:#1c1a19;--muted:#555;--line:#cfcfcf;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .wrap{max-width:none;padding:0}
+  .topbar{margin-bottom:12px}
+  #homeBtn,.end .row,.rail .log{display:none!important}
+  .game{display:block}
+  .rail{display:none!important}
+  .grid2{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .trifecta{grid-template-columns:200px minmax(0,1fr)!important}
+  .dl,.stat,.real,.outcome,.trifecta{break-inside:avoid;page-break-inside:avoid}
+  .printonly{display:block!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;box-shadow:none!important}
+  @page{margin:14mm}
+}
+.printonly{display:none}
+
+/* The Board Report additions */
+.cardgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 4px}
+.pick{display:flex;flex-direction:column;gap:8px;text-align:left;background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;min-height:88px}
+.pick:hover{border-color:var(--ink)}
+.pick.on{border-color:var(--aqua);background:var(--aqua-soft);box-shadow:inset 4px 0 0 var(--aqua)}
+.pick .pt{font-size:15px;line-height:1.4}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag.mod{border-color:var(--aqua);color:var(--aqua)}
+.cost{font-family:var(--f-mono);font-weight:600;font-size:14px}
+.link{font-size:12px;font-family:var(--f-mono)}
+.link.ok{color:var(--good)} .link.no{color:var(--red)}
+.budget{font-family:var(--f-mono);font-size:14px}
+.primary[disabled]{opacity:.45;cursor:not-allowed;filter:none}
+.dirgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 16px}
+.dir{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.dir h3{font-size:20px;margin:2px 0 6px}
+.dir p{font-size:14px;margin:0}
+.outline{margin:6px 0 0;padding-left:20px;font-size:13px}
+.outline>li{margin:6px 0}
+.outline>li.now>span{color:var(--red);font-weight:600}
+.outline ul{margin:2px 0 0;padding-left:14px;color:var(--muted)}
+.outline b{font-family:var(--f-mono);font-weight:500}
+.dirs{list-style:none;margin:0;padding:0;font-size:14px}
+.dirs li{padding:5px 0;border-top:1px dashed var(--line)} .dirs li:first-child{border-top:0}
+.bl{display:flex;flex-direction:column;gap:6px;margin-top:18px;font-weight:600;font-size:15px}
+.bl textarea{font:inherit;font-weight:400;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);resize:vertical}
+.bl textarea:focus-visible{outline:2px solid var(--aqua);outline-offset:1px}
+.dl .tags{display:inline-flex;vertical-align:1px;margin-left:4px}
+@media (max-width:860px){.cardgrid,.dirgrid{grid-template-columns:minmax(0,1fr)}}
+@media print{.cardgrid,.dirgrid{display:none!important}}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand"><h1>The Board Report</h1><span class="eyebrow">Security and privacy board report</span></div>
+    <button class="linkbtn" id="homeBtn" hidden>New report</button>
+  </header>
+  <main id="app"></main>
+  <footer class="credit">&copy; 2026 Chuck Kesler &middot; Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/" rel="license noopener" target="_blank">CC BY-NC 4.0</a> &middot; A companion to <a href="https://jckesler.github.io/the-2am-page/" target="_blank" rel="noopener">The 2AM Page</a></footer>
+</div>
+<script>
+/* ReportKit 1.0: the PDF report, run code and result check shared by these games.
+   Builds a real PDF in the browser with no library and no network. Nothing is stored or sent. */
+window.ReportKit = (function(){
+"use strict";
+var WR=[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584,761,556,0,222,556,333,1000,556,556,333,1000,667,333,1000,0,611,0,0,222,222,333,333,350,556,1000,333,1000,500,333,944,0,500,667,278,333,556,556,556,556,260,556,333,737,370,556,584,333,737,333,400,584,333,333,333,556,537,278,333,333,365,556,834,834,834,611,667,667,667,667,667,667,1000,722,667,667,667,667,278,278,278,278,722,722,778,778,778,778,778,584,778,722,722,722,722,667,667,611,556,556,556,556,556,556,889,500,556,556,556,556,278,278,278,278,556,556,556,556,556,556,556,584,611,556,556,556,556,500,556,500],WB=[278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,389,280,389,584,761,556,0,278,556,500,1000,556,556,333,1000,667,333,1000,0,611,0,0,278,278,500,500,350,556,1000,333,1000,556,333,944,0,500,667,278,333,556,556,556,556,280,556,333,737,370,556,584,333,737,333,400,584,333,333,333,611,556,278,333,333,365,556,834,834,834,611,722,722,722,722,722,722,1000,722,667,667,667,667,278,278,278,278,722,722,778,778,778,778,778,584,778,722,722,722,722,667,667,611,556,556,556,556,556,556,889,556,556,556,556,556,278,278,278,278,611,611,611,611,611,611,611,584,611,611,611,611,611,556,611,556];
+var CP = {0x20AC:128,0x201A:130,0x0192:131,0x201E:132,0x2026:133,0x2020:134,0x2021:135,0x02C6:136,0x2030:137,0x0160:138,0x2039:139,0x0152:140,0x017D:142,
+  0x2018:145,0x2019:146,0x201C:147,0x201D:148,0x2022:149,0x2013:150,0x2014:151,0x02DC:152,0x2122:153,0x0161:154,0x203A:155,0x0153:156,0x017E:158,0x0178:159};
+var SUBS = [[/→/g,'->'],[/←/g,'<-'],[/≥/g,'>='],[/≤/g,'<='],[/≠/g,'!='],[/ | | /g,' '],[/‑/g,'-']];
+
+function plain(s){ // strip tags and decode the few entities the games use
+  return String(s==null?'':s).replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&middot;/g,'·').replace(/\s+/g,' ').trim();
+}
+function enc(s){
+  s = plain(s); SUBS.forEach(function(r){ s = s.replace(r[0], r[1]); });
+  var out = [];
+  for(var i=0;i<s.length;i++){ var c = s.charCodeAt(i);
+    if(c>=32 && c<127) out.push(c); else if(c>=160 && c<256) out.push(c); else if(CP[c]) out.push(CP[c]); else if(c>=0xD800 && c<0xDC00){ i++; out.push(63); } else out.push(63); }
+  return out;
+}
+function wOf(b, bold){ var t = bold?WB:WR; var s = 0; for(var i=0;i<b.length;i++){ s += (b[i]>=32 ? (t[b[i]-32]||556) : 0); } return s; }
+function wrap(text, bold, size, maxw){
+  var b = enc(text), lim = maxw*1000/size, words = [[]], lines = [], line = [];
+  for(var i=0;i<b.length;i++){ if(b[i]===32) words.push([]); else words[words.length-1].push(b[i]); }
+  words.forEach(function(w){
+    if(!w.length) return;
+    var cand = line.length ? line.concat([32], w) : w.slice();
+    if(wOf(cand,bold) <= lim){ line = cand; return; }
+    if(line.length){ lines.push(line); line = []; }
+    if(wOf(w,bold) <= lim){ line = w.slice(); return; }
+    var cur = []; w.forEach(function(ch){ if(cur.length && wOf(cur.concat([ch]),bold) > lim){ lines.push(cur); cur = []; } cur.push(ch); }); line = cur;
+  });
+  if(line.length || !lines.length) lines.push(line);
+  return lines;
+}
+function pstr(b){ var s = '('; for(var i=0;i<b.length;i++){ var c = b[i];
+  if(c===40||c===41||c===92) s += '\\'+String.fromCharCode(c); else if(c>126) s += '\\'+('00'+c.toString(8)).slice(-3); else s += String.fromCharCode(c); } return s+')'; }
+function rgb(hex){ hex = hex.replace('#',''); return [0,2,4].map(function(i){ return (parseInt(hex.substr(i,2),16)/255).toFixed(3); }).join(' '); }
+
+var COL = {ink:'#1c1a19', muted:'#6a6460', line:'#dcd6d0', red:'#cc0000', aqua:'#00796b', amber:'#a35a00', good:'#2e7d4f', tint:'#f3f1ee', best:'#2e7d4f', ok:'#a35a00', poor:'#cc0000'};
+
+/* doc = {game, kind, company, sector, title, sub, name, code, rebuilt, stats:[{label,value,max,better,note}],
+          sections:[{heading, intro, entries:[{head, tag, grade, chose, lines:[]}], bullets:[], note}], verify, license} */
+function pdf(doc){
+  var PW = 612, PH = 792, M = 54, CW = PW - 2*M, BOT = 64;
+  var pages = [], ops = null, y = 0;
+  function newPage(){ ops = []; pages.push(ops); y = PH - M; }
+  function need(h){ if(y - h < BOT) newPage(); }
+  function txt(x, yy, b, bold, size, color){ ops.push('BT /'+(bold?'F2':'F1')+' '+size+' Tf '+rgb(color||COL.ink)+' rg '+x.toFixed(2)+' '+yy.toFixed(2)+' Td '+pstr(b)+' Tj ET'); }
+  function box(x, yy, w, h, color){ ops.push(rgb(color)+' rg '+x.toFixed(2)+' '+yy.toFixed(2)+' '+w.toFixed(2)+' '+h.toFixed(2)+' re f'); }
+  function para(text, o){ o = o||{}; var size = o.size||10.5, lead = o.lead||size*1.38, x = M+(o.indent||0), w = CW-(o.indent||0)-(o.right||0);
+    var ls = wrap(text, o.bold, size, w);
+    ls.forEach(function(l){ need(lead); y -= lead; txt(x, y+lead*0.28, l, o.bold, size, o.color); });
+    return ls.length*lead; }
+  function measure(text, o){ o = o||{}; var size = o.size||10.5, lead = o.lead||size*1.38; return wrap(text, o.bold, size, CW-(o.indent||0)-(o.right||0)).length*lead; }
+
+  newPage();
+  // header
+  box(M, y-4, CW, 4, COL.red); y -= 22;
+  txt(M, y, enc(doc.game), true, 20, COL.ink);
+  var kb = enc((doc.kind||'Report').toUpperCase()); txt(PW-M-wOf(kb,true)*8.5/1000, y+2, kb, true, 8.5, COL.muted);
+  y -= 8;
+  para(doc.company + (doc.sector ? '  ·  '+doc.sector : ''), {size:11, color:COL.muted});
+  y -= 8;
+  // meta table
+  var meta = [['Name', doc.name ? doc.name : '(not entered)'], ['Saved', doc.saved], ['Run code', doc.code]];
+  if(doc.rebuilt) meta.push(['Note', 'Rebuilt from a run code with "Check a result", not from a live play.']);
+  var mh = meta.length*16 + 14; need(mh);
+  box(M, y-mh, CW, mh, COL.tint);
+  var my = y - 18;
+  meta.forEach(function(r){ txt(M+12, my, enc(r[0]), true, 9.5, COL.muted); var vb = enc(r[1]); txt(M+80, my, vb, r[0]==='Run code', r[0]==='Run code'?11:10, r[0]==='Note'?COL.red:COL.ink); my -= 16; });
+  y -= mh + 18;
+  // outcome
+  para(doc.title, {size:17, bold:true, lead:22});
+  y -= 2; para(doc.sub, {size:10.5, color:COL.ink});
+  y -= 10;
+  // stats
+  if(doc.stats && doc.stats.length){
+    doc.stats.forEach(function(s){
+      need(26);
+      var lb = enc(s.label + (s.note ? '  ('+s.note+')' : '')); txt(M, y-11, lb, false, 9.5, COL.muted);
+      var vb = enc(String(s.value) + (s.max ? ' / '+s.max : '')); txt(M+CW-wOf(vb,true)*10.5/1000, y-11, vb, true, 10.5, COL.ink);
+      if(s.bar !== false){
+        var frac = Math.max(0, Math.min(1, s.value/(s.max||100)));
+        var good = s.better==='low' ? s.value<=40 : s.value>=60, bad = s.better==='low' ? s.value>65 : s.value<40;
+        var c = s.better ? (good?COL.good:bad?COL.red:COL.amber) : COL.ink;
+        box(M, y-19, CW, 4, COL.line); box(M, y-19, CW*frac, 4, c);
+        y -= 27;
+      } else y -= 18;
+    });
+    y -= 6;
+  }
+  // sections
+  (doc.sections||[]).forEach(function(sec){
+    need(40); y -= 6;
+    para(sec.heading, {size:13, bold:true, lead:18});
+    box(M, y-3, CW, 0.8, COL.line); y -= 8;
+    if(sec.intro){ para(sec.intro, {size:10, color:COL.muted}); y -= 4; }
+    (sec.entries||[]).forEach(function(e){
+      var hdr = e.head, tag = e.tag||'', IND = 12;
+      var hH = measure(hdr, {size:10.5, bold:true, indent:IND}), tH = tag ? measure(tag, {size:9, indent:IND}) : 0, cH = e.chose ? measure('You chose: '+e.chose, {size:10, indent:IND}) : 0;
+      var lH = 0; (e.lines||[]).forEach(function(l){ lH += measure(l, {size:9.5, indent:IND}); });
+      need(Math.min(hH + tH + cH + lH + 4, 300));
+      var top = y, pg = pages.length;
+      para(hdr, {size:10.5, bold:true, indent:IND});
+      if(tag) para(tag, {size:9, bold:true, indent:IND, color: COL[e.grade]||COL.muted});
+      if(e.chose) para('You chose: '+e.chose, {size:10, indent:IND});
+      (e.lines||[]).forEach(function(l){ para(l, {size:9.5, indent:IND, color:COL.muted}); });
+      if(pages.length===pg) box(M, y-2, 3, top-y, COL[e.grade]||COL.line);
+      y -= 10;
+    });
+    (sec.bullets||[]).forEach(function(b){
+      need(14); var startY = y; para(b, {size:9.5, indent:12}); txt(M+2, startY-9.5*1.38*0.72, enc('•'), false, 9.5, COL.muted); y -= 3; });
+    if(sec.note){ y -= 2; para(sec.note, {size:9, color:COL.muted}); }
+    y -= 6;
+  });
+  // verify
+  if(doc.verify){ need(50); y -= 6; var vh = measure(doc.verify, {size:9.5, indent:12, right:12}) + 16; need(vh); box(M, y-vh, CW, vh, COL.tint); box(M, y-vh, 3, vh, COL.aqua); y -= 8; para(doc.verify, {size:9.5, indent:12, right:12}); y -= 8; }
+
+  // footers
+  var N = pages.length;
+  pages.forEach(function(p, i){ var cur = ops; ops = p;
+    box(M, 44, CW, 0.6, COL.line);
+    txt(M, 32, enc(doc.game+'  ·  '+doc.code), false, 8, COL.muted);
+    var pb = enc('Page '+(i+1)+' of '+N); txt(PW-M-wOf(pb,false)*8/1000, 32, pb, false, 8, COL.muted);
+    if(doc.license) txt(M, 22, enc(doc.license), false, 7, COL.muted);
+    ops = cur; });
+
+  // assemble
+  var objs = [];
+  objs[1] = '<< /Type /Catalog /Pages 2 0 R >>';
+  objs[3] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+  objs[4] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+  var kids = [], n = 5;
+  pages.forEach(function(p){ var stream = p.join('\n'); objs[n+1] = '<< /Length '+stream.length+' >>\nstream\n'+stream+'\nendstream';
+    objs[n] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+PW+' '+PH+'] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents '+(n+1)+' 0 R >>';
+    kids.push(n+' 0 R'); n += 2; });
+  objs[2] = '<< /Type /Pages /Kids ['+kids.join(' ')+'] /Count '+pages.length+' >>';
+  objs[n] = '<< /Title '+pstr(enc(doc.game+' - '+doc.company))+' /Producer (ReportKit 1.0) /Creator '+pstr(enc(doc.game))+' >>';
+  var out = '%PDF-1.4\n%âãÏÓ\n', offs = [];
+  for(var k=1;k<=n;k++){ offs[k] = out.length; out += k+' 0 obj\n'+objs[k]+'\nendobj\n'; }
+  var xref = out.length;
+  out += 'xref\n0 '+(n+1)+'\n0000000000 65535 f \n';
+  for(k=1;k<=n;k++) out += ('0000000000'+offs[k]).slice(-10)+' 00000 n \n';
+  out += 'trailer\n<< /Size '+(n+1)+' /Root 1 0 R /Info '+n+' 0 R >>\nstartxref\n'+xref+'\n%%EOF\n';
+  var bytes = new Uint8Array(out.length); for(k=0;k<out.length;k++) bytes[k] = out.charCodeAt(k) & 255;
+  return bytes;
+}
+
+function download(bytes, filename){
+  var blob = new Blob([bytes], {type:'application/pdf'});
+  if(window.navigator && window.navigator.msSaveOrOpenBlob){ window.navigator.msSaveOrOpenBlob(blob, filename); return true; }
+  var url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = filename; a.rel = 'noopener'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 30000);
+  return true;
+}
+
+/* ---------- run codes: PREFIX + base-32 digits + 3-digit check ---------- */
+var A = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+function hash(s){ var h = 0x811c9dc5; for(var i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h; }
+function check(prefix, body){ var h = hash(prefix+':'+body) % 32768; return A[(h>>10)&31]+A[(h>>5)&31]+A[h&31]; }
+function encode(prefix, nums){
+  var body = nums.map(function(v){ if(v<0||v>31||v!==Math.floor(v)) throw new Error('run code value out of range: '+v); return A[v]; }).join('');
+  var all = body + check(prefix, body), parts = [];
+  for(var i=0;i<all.length;i+=4) parts.push(all.slice(i,i+4));
+  return prefix + '-' + parts.join('-');
+}
+function decode(prefix, code){
+  var s = String(code||'').toUpperCase().replace(/[^0-9A-Z]/g,'');
+  if(s.indexOf(prefix) !== 0) return {error:'That code isn\'t from this game. Codes from this game start with '+prefix+'.'};
+  s = s.slice(prefix.length).replace(/O/g,'0').replace(/[IL]/g,'1');
+  if(s.length < 4) return {error:'That code is too short. Check that you copied all of it.'};
+  var body = s.slice(0,-3), ck = s.slice(-3);
+  if(check(prefix, body) !== ck) return {error:'That code doesn\'t check out. It may have a typo, or it may have been changed.'};
+  return {nums: body.split('').map(function(c){ return A.indexOf(c); })};
+}
+
+/* ---------- UI ---------- */
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function stamp(){ var d = new Date(); return d.toLocaleString(undefined, {year:'numeric', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'}); }
+function fileName(game, company){ var d = new Date(), p = function(n){ return (n<10?'0':'')+n; };
+  return (game+' - '+company).replace(/[^A-Za-z0-9 ._-]+/g,'').replace(/\s+/g,' ').trim()+' '+d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'.pdf'; }
+
+/* The end-screen block. getDoc(name) returns the doc model. */
+function panel(o){
+  var id = 'rk'+Math.floor(Math.random()*1e6);
+  var h = '<div class="rk-panel" id="'+id+'">';
+  if(o.rebuilt) h += '<p class="rk-rebuilt"><b>Rebuilt from run code '+esc(o.code)+'.</b> This is the outcome that code produces. Compare it with the PDF you were given.</p>';
+  h += '<h3>Save your result</h3><div class="rk-row"><label class="rk-name">Your name <span class="note">(optional, printed on the PDF only)</span><input type="text" maxlength="80" autocomplete="name" spellcheck="false"></label>'+
+       '<button class="primary rk-dl" type="button">Download PDF</button><button class="linkbtn rk-pr" type="button">Print</button></div>'+
+       '<p class="rk-code note">Run code: <code>'+esc(o.code)+'</code> <button class="linkbtn rk-cp" type="button">Copy</button> <span class="rk-msg" aria-live="polite"></span></p>'+
+       '<p class="note rk-fine">The PDF is made in your browser. Nothing you type is stored or sent anywhere. The run code records your company and choices, so anyone can paste it into "Check a result" on the start screen and see the same outcome.</p></div>';
+  return {html:h, wire:function(){
+    var root = document.getElementById(id); if(!root) return;
+    var inp = root.querySelector('input'), msg = root.querySelector('.rk-msg');
+    root.querySelector('.rk-dl').onclick = function(){
+      try{ var doc = o.getDoc(plainName(inp.value)); doc.saved = stamp(); doc.code = o.code; doc.rebuilt = !!o.rebuilt;
+        download(pdf(doc), fileName(doc.game, doc.company)); msg.textContent = 'PDF downloaded.'; }
+      catch(e){ msg.textContent = 'The download didn\'t work here. Use Print and choose "Save as PDF".'; if(window.console) console.error(e); }
+    };
+    root.querySelector('.rk-pr').onclick = function(){ var n = plainName(inp.value); document.querySelectorAll('.rk-printname').forEach(function(el){ el.textContent = n ? 'Name: '+n : ''; }); window.print(); };
+    root.querySelector('.rk-cp').onclick = function(){ copy(o.code, msg); };
+  }};
+}
+function plainName(s){ return String(s||'').replace(/[\u0000-\u001f]/g,'').trim().slice(0,80); }
+function copy(text, out){
+  function fallback(){ var ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); var ok=false; try{ ok = document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); out.textContent = ok ? 'Copied.' : 'Select the code and copy it.'; }
+  try{ if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(text).then(function(){ out.textContent='Copied.'; }, fallback); } else fallback(); }catch(e){ fallback(); }
+}
+/* The start-screen "Check a result" block. onCode(nums) rebuilds the run; return false or throw if the code doesn't fit. */
+function checker(prefix, onCode){
+  var id = 'rkc'+Math.floor(Math.random()*1e6);
+  var h = '<section class="sec rk-check" id="'+id+'"><h3>Check a result</h3><p class="note" style="margin:0 0 8px">Paste a run code from someone\'s PDF to rebuild that exact outcome.</p>'+
+    '<div class="rk-row"><label class="rk-name"><span class="rk-sr">Run code</span><input type="text" placeholder="'+prefix+'-…" autocomplete="off" spellcheck="false" aria-label="Run code"></label><button class="linkbtn rk-go" type="button">Rebuild</button></div><p class="rk-msg note" aria-live="polite"></p></section>';
+  return {html:h, wire:function(){
+    var root = document.getElementById(id); if(!root) return;
+    var inp = root.querySelector('input'), msg = root.querySelector('.rk-msg');
+    function go(){ var r = decode(prefix, inp.value); if(r.error){ msg.textContent = r.error; return; }
+      var ok = false; try{ ok = onCode(r.nums, normalize(prefix, r.nums)) !== false; }catch(e){ ok = false; if(window.console) console.error(e); }
+      if(!ok) msg.textContent = 'That code doesn\'t match any run of this version of the game.'; }
+    root.querySelector('.rk-go').onclick = go;
+    inp.onkeydown = function(e){ if(e.key==='Enter') go(); };
+  }};
+}
+function normalize(prefix, nums){ return encode(prefix, nums); }
+
+var CSS = '.rk-panel{margin-top:18px;padding:16px 18px;border:1px solid var(--line);border-left:4px solid var(--aqua);background:var(--panel);border-radius:6px}'+
+  '.rk-panel h3{margin:0 0 10px;font-size:20px}.rk-row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end}'+
+  '.rk-name{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;flex:1 1 240px;max-width:360px}'+
+  '.rk-name input{font:inherit;font-weight:400;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--ink);width:100%}'+
+  '.rk-name input:focus-visible{outline:2px solid var(--aqua);outline-offset:1px}'+
+  '.rk-code{margin:12px 0 0}.rk-code code{font-family:var(--f-mono);font-size:15px;font-weight:600;color:var(--ink);letter-spacing:.02em;word-break:break-all}'+
+  '.rk-panel .primary{background:var(--aqua);padding:10px 18px;font-size:15px}.rk-fine{margin:8px 0 0;font-size:13px}.rk-rebuilt{margin:0 0 12px;padding:8px 12px;background:var(--amber-soft);border-radius:4px;font-size:14px}'+
+  '.rk-check{margin-top:28px}.rk-check h3{font-size:20px;margin:0 0 4px}.rk-check .rk-msg{margin:8px 0 0;min-height:1em}.rk-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}'+
+  '.rk-printname{display:none}'+
+  '@media print{.rk-panel .rk-row,.rk-panel .rk-cp,.rk-panel .rk-msg,.rk-panel h3,.rk-panel .rk-fine,.rk-check{display:none!important}.rk-panel{border:none;padding:0}.rk-printname{display:block}}';
+(function(){ var st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st); })();
+
+return {pdf:pdf, download:download, encode:encode, decode:decode, panel:panel, checker:checker, plain:plain, stamp:stamp,
+        LICENSE:'© 2026 Chuck Kesler · CC BY-NC 4.0'};
+})();
+</script>
+<script>
+(function(){
+"use strict";
+/* The Board Report. Cards carry a topic tag and, in course mode (?course=itao511), the ITAO 511 module numbers. */
+var COURSE = /[?&#]course=itao511\b/i.test(location.search + location.hash);
+var CAP = 1200; // the ask budget, in $K
+var G = {best:'Strong choice', ok:'Defensible', poor:'Weak choice'};
+var FX = {best:{conf:3,cred:4}, ok:{conf:0,cred:1}, poor:{conf:-6,cred:-7}};
+
+/* ---------- companies ---------- */
+var C = [
+ {id:'harbor', name:'Harbor Ridge Health', tag:'Health care', sector:'Regional health system · Norfolk, Virginia',
+  blurb:'Three hospitals, forty clinics and about 9,000 employees. A HIPAA covered entity with a few hundred vendors.',
+  year:'Last spring, a ransomware attack at a health system two hours away diverted its ambulances for nine days, and your own directors read every word of the coverage. Harbor Ridge completed its HIPAA risk analysis and passed a third-party assessment with no major findings. Your predecessor left in the summer; you started 90 days ago.',
+  peer:'the health system two hours away',
+  dirs:[['Diane Okafor','Chair','A former CFO of a hospital chain. She thinks in dollars, trends and comparisons, and she reads the appendix.'],
+        ['Dr. Raymond Liu','Director','A former chief medical officer who ran clinical operations through a week of ransomware downtime at another hospital. He wants to know what happens to patients.'],
+        ['Elena Brooks','Director','A health care attorney who sits on two other boards. She asks about regulators, patients\' rights and what you\'d have to disclose.']]},
+ {id:'pine', name:'Pinecrest Outfitters', tag:'Retail', sector:'Outdoor retailer · publicly traded · Asheville, NC',
+  blurb:'Two hundred stores, a website that ships to the US and Europe, and a loyalty program with eight million members.',
+  year:'Two other retailers had attacks that started with a phone call to the help desk this year, and one of them filed an SEC Form 8-K within the week. Pinecrest passed its PCI DSS assessment again. Your predecessor left in the summer; you started 90 days ago.',
+  peer:'the retailers in the news this year',
+  dirs:[['Marcus Bell','Chair','A former retail CFO. He thinks in dollars, trends and comparisons, and he reads the appendix.'],
+        ['Priya Raman','Director','A former COO of a hotel group whose systems were shut down for ten days after an attacker talked its help desk into a reset. She wants to know how you\'d keep the stores open.'],
+        ['Thomas Greer','Director','A securities lawyer. He asks about disclosure, materiality and what the SEC would expect, and he watches the privacy laws in the states where you sell.']]},
+ {id:'lark', name:'Larkspur HR', tag:'Software', sector:'HR and benefits software vendor · Denver, CO',
+  blurb:'About 1,400 business customers in the US and the EU, and payroll and benefits data on millions of their employees.',
+  year:'Earlier this year, a vendor that connects to Larkspur\'s CRM was breached, and attackers used its tokens to export customer contact data. Larkspur\'s SOC 2 Type II report came back clean again. Your predecessor left in the summer; you started 90 days ago.',
+  peer:'the payroll software company that was down for two weeks with ransomware last spring',
+  dirs:[['Hannah Weiss','Chair','A former SaaS CFO. She thinks in dollars, trends and comparisons, and she reads the appendix.'],
+        ['Carlos Mendes','Director','A former CIO of one of Larkspur\'s largest customers. He has sat on the other side of a vendor breach notice and wants to know what customers would hear.'],
+        ['Ingrid Sorensen','Director','A privacy lawyer based in Copenhagen. She asks about GDPR, the EU AI Act and what your EU customers\' regulators would expect.']]}
+];
+function T(x, co){ return typeof x==='function' ? x(co) : (x && typeof x==='object' && !Array.isArray(x) ? (x[co.id]!==undefined ? x[co.id] : x._) : x); }
+
+/* ---------- report sections ----------
+   Each card: id, t (text, or per-company map), g (grade, or per-company map), tag, m (modules), why (lesson). */
+var SEC = [
+ {id:'frame', n:1, title:'How you\'ll frame it', ask:'Pick one way to organize the report.', min:1, max:1, cards:[
+  {id:'f1', t:'By our top business risks, each with what we\'re doing about it and what we need', g:'best', tag:'Risk', m:[1,5],
+   why:'Boards govern risk. Organizing the report around a few business risks lets directors decide how much is enough, which is the decision only they can make.'},
+  {id:'f2', t:'By the six NIST CSF 2.0 functions, with a maturity score for each', g:'ok', tag:'Frameworks', m:[4],
+   why:'The CSF is a good way to run and measure a program, and a one-page maturity view makes a useful appendix. As the main structure, it reads like an audit, and it leaves directors to work out which gaps matter to the business.'},
+  {id:'f3', t:'As a compliance checklist: every framework, law and audit we\'re subject to, with its status', g:'poor', tag:'Compliance', m:[3,4],
+   why:'A wall of green tells the board you passed your audits. It doesn\'t tell them whether you\'re secure, which is the clean-audit trap, and the first question you\'ll get is "So we\'re secure?"'}
+ ]},
+ {id:'risk', n:2, title:'Top risks', ask:'Pick exactly three, in business terms.', min:3, max:3, cards:[
+  {id:'r1', t:{harbor:'Ransomware that takes clinical systems down for days, diverting ambulances and delaying care', pine:'Ransomware that shuts down store registers and the website during the holiday season', lark:'Ransomware or a long outage that stops payroll and benefits for 1,400 customers'}, g:'best', tag:'Ransomware', m:[2,11],
+   why:'It\'s the risk every board asks about, stated as what would happen to the business. Directors can weigh days of downtime; they can\'t weigh "malware."'},
+  {id:'r2', t:{harbor:'A vendor with remote access becoming the way in (most of our 300 vendors have never been assessed)', pine:'A breach at a payments or e-commerce vendor exposing customers\' card or account data', lark:'A breach at one of our sub-processors or integrations exposing customers\' HR data'}, g:'best', tag:'Vendors', m:[9],
+   why:'Third parties were behind many of the biggest breaches of recent years, and the board can act on it: vendor contracts, assessments and concentration risk are business decisions.'},
+  {id:'r3', t:'An attacker talking our help desk into resetting someone\'s password and MFA', g:{harbor:'ok', pine:'best', lark:'ok'}, tag:'Identity', m:[7,13],
+   why:'Help-desk social engineering is how several major attacks began. It\'s especially pressing for Pinecrest, where two peers were hit that way this year; elsewhere it\'s a real risk that fits better as part of the ransomware story.'},
+  {id:'r4', t:{harbor:'Employees viewing patient records with no business reason, and the fines and lost trust that follow', pine:'Keeping eight years of loyalty data we no longer need, and what a breach of it would expose', lark:'EU customers\' employee data handled outside our GDPR commitments to them'}, g:{harbor:'best', pine:'ok', lark:'best'}, tag:'Privacy', m:[3,7,10,13],
+   why:'A privacy risk stated in business terms belongs on the list when it\'s one of the company\'s biggest. For a hospital and for a processor holding EU data, it is. For the retailer, it matters but probably isn\'t top three.'},
+  {id:'r5', t:'Employees pasting company data into personal AI accounts', g:'ok', tag:'AI', m:[12],
+   why:'Shadow AI is real and new, which makes it a good "what changed" item. It\'s rarely one of the three risks that could hurt the company most this year.'},
+  {id:'r6', t:'A fake vendor or executive tricking finance into wiring money', g:{harbor:'ok', pine:'ok', lark:'ok'}, tag:'Fraud', m:[2,13],
+   why:'Business email compromise is expensive and boards understand it. It\'s defensible, but a payment-fraud loss is usually smaller than a shutdown or a large breach.'},
+  {id:'r7', t:'Advanced persistent threats (APTs) and zero-day exploits', g:'poor', tag:'Threats', m:[2,8],
+   why:'These are technical categories, not business risks. A director can\'t tell what would happen to the company or what to do about it.'},
+  {id:'r8', t:'Cyber attacks are increasing in volume and sophistication', g:'poor', tag:'Threats', m:[2],
+   why:'True of every company, so it tells the board nothing about this one. It also invites the reply "So what do you want us to do?"'},
+  {id:'r9', t:'14,000 open findings in our vulnerability scanner', g:'poor', tag:'Vulnerabilities', m:[8],
+   why:'A raw count is neither a risk nor a business term. If vulnerabilities matter here, the risk is something like "critical systems exposed to flaws attackers are actively exploiting," with a trend.'}
+ ]},
+ {id:'metric', n:3, title:'Program health', ask:'Pick exactly four metrics.', min:4, max:4, cards:[
+  {id:'m1', t:'MFA: 96% of accounts covered, and 71% of admin accounts on phishing-resistant MFA, up from 40%', g:'best', tag:'Identity', m:[7],
+   why:'Coverage with a trend and a stronger target for the accounts that matter most. It tells the board where you are and which way you\'re going.'},
+  {id:'m2', t:'Critical patches applied within our 14-day target: 88%, against a goal of 95%, up from 70%', g:'best', tag:'Vulnerabilities', m:[8],
+   why:'Measured against a target the board can hold you to, and honest about missing it. Showing a miss with a trend builds more credibility than a perfect number.'},
+  {id:'m3', t:'Critical vendors assessed this year: 22 of 60, up from 9', g:'best', tag:'Vendors', m:[9],
+   why:'A coverage measure tied to a top risk, with progress. Two thirds still unassessed is the kind of gap a board can fund.'},
+  {id:'m4', t:'Last incident tabletop with the executive team: 14 months ago', g:'best', tag:'Incident response', m:[11],
+   why:'Bad news, plainly stated, about something the board can fix by showing up. Directors remember who told them before an incident, not after.'},
+  {id:'m5', t:'Reporting: 41% of staff reported last quarter\'s real phishing campaign, and the first report came in 6 minutes', g:'best', tag:'Culture', m:[13],
+   why:'Reporting rate and time to report are what the ETH Zurich study and the NCSC point to. They show whether people act, not just whether they finished a module.'},
+  {id:'m6', t:'Backups: we restored a critical system from backup two weeks ago, in 9 hours', g:'best', tag:'Resilience', m:[11],
+   why:'A tested restore with a time on it answers the question every director has after a ransomware story: how long would we be down?'},
+  {id:'m7', t:'4 million attacks blocked last quarter', g:'poor', tag:'Vanity metric', m:[13],
+   why:'It sounds impressive and tells the board nothing about whether the company is safer. Every firewall blocks millions of things.'},
+  {id:'m8', t:'99% security awareness training completion', g:'poor', tag:'Vanity metric', m:[13],
+   why:'Completion is what auditors check. A large field study (UC San Diego, 2025) found annual training had no measurable link to who fell for a phish.'},
+  {id:'m9', t:'Phishing click rate on simulated tests: down to 3%', g:'poor', tag:'Vanity metric', m:[13],
+   why:'The tempting one. A click rate depends heavily on which fake email you send (1.8% to 30.8% in the same organization), so a falling number may only mean easier tests.'},
+  {id:'m10', t:'Firewall rules reviewed this year: 2,412', g:'poor', tag:'Activity', m:[5],
+   why:'An activity count. It shows the team was busy, not that the company is safer.'}
+ ]},
+ {id:'change', n:4, title:'What changed', ask:'Pick exactly two developments since the last meeting.', min:2, max:2, cards:[
+  {id:'c1', t:{harbor:'A health system two hours away was hit by ransomware and diverted ambulances for nine days', pine:'Two other retailers were attacked through their help desks, and one filed an 8-K within the week', lark:'A vendor connected to our CRM was breached, and attackers used its tokens to export our customer contacts'}, g:'best', tag:'Incident', m:[2,9,11],
+   why:'Something the directors have already read about, connected to your own exposure. It answers the question they were going to ask anyway.'},
+  {id:'c2', t:{harbor:'Clinicians started using an unapproved AI note-taking app with patients', pine:'Marketing started pasting customer lists into a personal AI account to write campaigns', lark:'We\'re launching an AI feature that ranks job applicants for EU and US customers'}, g:'best', tag:'AI', m:[12],
+   why:'AI is the change the board most needs to hear about from you rather than from the press, with what you\'re doing about it.'},
+  {id:'c3', t:{harbor:'Regulators fined a peer hospital for employees snooping in patient records', pine:'A state where we sell has a new privacy law that takes effect in January', lark:'An EU customer\'s data protection officer asked for our sub-processor list and transfer safeguards'}, g:'ok', tag:'Privacy law', m:[3,9],
+   why:'A legitimate change to report. It\'s a little less urgent than the incident or AI items, unless privacy is one of your top risks.'},
+  {id:'c4', t:'We moved the security team\'s monitoring to a new 24/7 provider', g:'ok', tag:'Operations', m:[5,11],
+   why:'Worth a line if it changed your risk, but it reads as operational news. Frame it by what it means for detection time.'},
+  {id:'c5', t:'We upgraded the firewalls to the vendor\'s newest model', g:'poor', tag:'Technology', m:[5],
+   why:'A technical change with no business consequence the board can act on. Save it for the IT steering committee.'},
+  {id:'c6', t:'The security team moved to a new floor and grew from 6 to 7 people', g:'poor', tag:'Team', m:[5],
+   why:'Not something a board needs. If headcount matters, it belongs in the ask, tied to a risk.'}
+ ]},
+ {id:'privacy', n:5, title:'Privacy', ask:'Pick one or two items.', min:1, max:2, cards:[
+  {id:'p1', t:{harbor:'Patient records from four closed clinics that we\'re keeping past our retention schedule', pine:'Eight years of loyalty and purchase history, including for members inactive since 2019', lark:'Former customers\' employee data we still hold after their contracts ended'}, g:'best', tag:'Data minimization', m:[3,10],
+   why:'Data you keep but don\'t need is pure risk: it can only be breached. Deleting it is one of the cheapest risk reductions a board can approve.'},
+  {id:'p2', t:'A proposal from HR to monitor employees\' screens and keystrokes to measure productivity', g:'best', tag:'Ethics', m:[13],
+   why:'A decision the board should see before it happens. Is it proportionate, will employees know, and will you keep only what you need? It\'s also a culture risk.'},
+  {id:'p3', t:{harbor:'A new patient app feature that predicts missed appointments from patients\' data', pine:'A new feature that infers customers\' life events from their purchases to target offers', lark:'Our AI ranking feature, which infers things about candidates from their applications'}, g:'best', tag:'Profiling', m:[12,13],
+   why:'Inferences about people are where customers feel most exposed. An ethics review before launch is exactly the kind of oversight a board should want.'},
+  {id:'p4', t:'We updated our website privacy notice this year', g:'poor', tag:'Compliance', m:[3,5],
+   why:'Routine compliance housekeeping. It takes a privacy slot without telling the board anything about privacy risk.'}
+ ]},
+ {id:'ask', n:6, title:'The ask', ask:'Request up to $1.2 million. Tie every request to one of your top risks.', min:0, max:8, budget:true, cards:[
+  {id:'a1', t:'Phishing-resistant MFA for all staff', cost:400, supports:['r1','r3','r6'], tag:'Identity', m:[7],
+   why:'Phishing-resistant MFA closes the most common ways in, from stolen passwords to help-desk tricks.'},
+  {id:'a2', t:'Two security engineers', cost:450, supports:['r1','r2','r3'], tag:'People', m:[5],
+   why:'Headcount works as an ask when it\'s tied to a specific risk the team can\'t cover today.'},
+  {id:'a3', t:'A vendor-risk program and assessment tool', cost:250, supports:['r2'], tag:'Vendors', m:[9],
+   why:'The direct answer to unassessed vendors.'},
+  {id:'a4', t:'An executive tabletop and an incident response retainer', cost:120, supports:['r1'], tag:'Incident response', m:[11],
+   why:'Cheap, fast, and it puts the executives in the room before the real thing.'},
+  {id:'a5', t:'Immutable backups and quarterly restore testing', cost:350, supports:['r1'], tag:'Resilience', m:[11],
+   why:'What actually decides how long a ransomware outage lasts.'},
+  {id:'a6', t:'A privacy engineer and a data-retention cleanup', cost:300, supports:['r4'], tag:'Privacy', m:[10],
+   why:'Tied to a privacy risk, it turns "we keep too much" into a funded plan.'},
+  {id:'a7', t:'An approved enterprise AI tool with no-training terms', cost:200, supports:['r5'], tag:'AI', m:[12],
+   why:'The usual fix for shadow AI is a tool people want to use, under terms you control.'},
+  {id:'a8', t:'A next-generation firewall refresh', cost:600, supports:[], tag:'Technology', m:[5],
+   why:'Not tied to any risk on your list, so it reads as a wish list. That costs you credibility on the rest of the ask.'}
+ ]}
+];
+function sec(id){ for(var i=0;i<SEC.length;i++) if(SEC[i].id===id) return SEC[i]; }
+function card(id){ for(var i=0;i<SEC.length;i++) for(var j=0;j<SEC[i].cards.length;j++) if(SEC[i].cards[j].id===id) return SEC[i].cards[j]; }
+
+/* ---------- Q&A: the first three that apply, in this order ---------- */
+var QA = [
+ {id:'q_wish', when:function(s){ return s.ask.some(function(id){ return !askLinked(id, s); }); }, who:0,
+  q:function(s){ var a = s.ask.filter(function(id){ return !askLinked(id, s); }).map(function(id){ var t = card(id).t; return t.charAt(0).toLowerCase()+t.slice(1); });
+    return 'You\'re asking for '+a.join(' and ')+'. None of your top risks '+(a.length>1?'mentions those':'mentions it')+'. Why do we need '+(a.length>1?'them':'it')+'?'; },
+  a:[{t:'You\'re right that I didn\'t tie it to a risk. I\'ll withdraw it for now.', g:'best', l:'Owning the gap protects your credibility on the rest of the ask.'},
+     {t:'There\'s a real need behind it. I can bring you a business case next quarter, with numbers and the risk it addresses.', g:'ok', l:'Fair, but you\'re making the case now, under pressure, instead of in the report.'},
+     {t:'Every security program needs current technology. It\'s part of the baseline.', g:'poor', l:'"Trust me, it\'s needed" is exactly what a wish list sounds like to a CFO.'}]},
+ {id:'q_secure', when:function(s){ return s.frame==='f3'; }, who:0,
+  q:function(){ return 'Everything on this page is green. So we\'re secure?'; },
+  a:[{t:'We\'re compliant, and that\'s a floor. Here\'s where we\'re still exposed.', g:'best', l:'Passing an audit isn\'t where you stop. Say what it does and doesn\'t cover.'},
+     {t:'We\'re in good shape, though no one can promise we\'re 100% secure.', g:'ok', l:'True, but it leaves the board with a false sense of comfort and no idea what\'s actually at risk.'},
+     {t:'Yes. We passed every audit this year with no major findings, and the auditors had no concerns about our controls.', g:'poor', l:'The clean-audit trap. Compliance taken as proof of security is how boards get surprised.'}]},
+ {id:'q_vanity', when:function(s){ return s.metric.some(function(id){ return ['m7','m8','m9'].indexOf(id)>=0; }); }, who:0,
+  q:function(s){ var m = card(s.metric.filter(function(id){ return ['m7','m8','m9'].indexOf(id)>=0; })[0]).t; return '"'+m+'." Is that good? Compared to what?'; },
+  a:[{t:'On its own, not much. Let me show you a measure tied to one of our top risks, with its trend.', g:'best', l:'Withdrawing a weak metric and offering a better one builds more credibility than defending it.'},
+     {t:'It\'s better than last year, and it\'s above the industry average our vendor reports for companies of our size and sector.', g:'ok', l:'A comparison helps, but a vendor\'s benchmark for a vanity number is still a vanity number.'},
+     {t:'It shows the program is working. Those numbers are hard to get.', g:'poor', l:'A director who knows the number can be gamed will discount the rest of your report.'}]},
+ {id:'q_ransom', when:function(s){ return s.risk.indexOf('r1')<0; }, who:1,
+  q:function(s, co){ return 'Could what happened to '+co.peer+' happen to us? I didn\'t see ransomware in your top risks.'; },
+  a:[{t:'Yes. Here\'s how it could happen, how long we\'d be down based on our last restore test, and what would shorten that.', g:'best', l:'Directors ask about ransomware more than anything else. Answer with exposure and recovery time.'},
+     {t:'I\'d want to check recovery times with our IT team, and I can come back to you with a clear answer by next week.', g:'ok', l:'Honest, but the board expected you to know this one. Ransomware is a business continuity risk, and it\'s the CISO\'s question to answer.'},
+     {t:'It\'s unlikely. We have strong defenses, including endpoint detection and response and email filtering on every account.', g:'poor', l:'Overconfidence. The companies that were hit had defenses too, and the board will remember you said it.'}]},
+ {id:'q_disclose', when:function(s){ return s.privacy.indexOf('p4')>=0; }, who:2,
+  q:function(s, co){ return co.id==='pine' ? 'If we had a breach of customer data tomorrow, what would we have to disclose, and to whom?' : 'If regulators looked at how we handle personal data tomorrow, what would they find?'; },
+  a:[{t:'Our biggest exposure is data we keep but don\'t need. I\'d like to bring you a plan to fix it.', g:'best', l:'Turning a gap into a plan is what the board wants from you.'},
+     {t:'We\'d meet our legal notification deadlines. Counsel has a playbook ready, and we reviewed it this year.', g:'ok', l:'Good to know, but it answers a narrower question than the one asked.'},
+     {t:'We updated the privacy notice, so we\'re in good shape.', g:'poor', l:'A notice says what you do. It doesn\'t make what you do low-risk.'}]},
+ {id:'q_tabletop', when:function(s){ return s.metric.indexOf('m4')>=0; }, who:1,
+  q:function(){ return 'Fourteen months since the last tabletop? Who\'s responsible for running the next one, and when is it?'; },
+  a:[{t:'I am. I\'d like to run it next quarter, with a director in the room.', g:'best', l:'Name an owner and a date. That\'s what turns a bad metric into confidence.'},
+     {t:'It\'s on our roadmap for next year, once we\'ve finished the other projects on the list.', g:'ok', l:'Vague. "Next year" is how fourteen months happened.'},
+     {t:'The previous CISO let it slip. I inherited that.', g:'poor', l:'Possibly true, and it doesn\'t matter to the board. It reads as blame.'}]},
+ {id:'q_sim', when:function(s){ return s.metric.indexOf('m9')<0; }, who:0,
+  q:function(){ return 'Why don\'t we run simulated phishing tests? My last company did them every month.'; },
+  a:[{t:'Big studies found the after-click lessons changed little, and the tests can cost trust. We track reporting instead.', g:'best', l:'Explain the evidence, offer the better metric and stay open. If a customer or insurer requires them, you\'d run them carefully.'},
+     {t:'We can start them next quarter if you\'d like to see a click rate, and I\'ll report it to you at every meeting.', g:'ok', l:'Responsive, but you\'d be adding a number the board will watch that depends heavily on which email you sent.'},
+     {t:'They\'re a waste of money. Your last company was doing it wrong.', g:'poor', l:'Possibly right on the evidence, and defensive in tone. You\'ve just made a director wrong in front of the board.'}]},
+ {id:'q_one', when:function(){ return true; }, who:0,
+  q:function(){ return 'If you could only fix one thing this year, what would it be?'; },
+  a:[{t:'The first risk on my list, and here\'s what fixing it would take.', g:'best', l:'Consistent with your report: the risk, the reason and the ask line up.'},
+     {t:'Honestly, everything on the list matters equally.', g:'poor', l:'If everything is a priority, nothing is. The board wants your judgment.'},
+     {t:'Our culture. If people don\'t report what they see, nothing else we do works as well as it should.', g:'ok', l:'A good point, and culture matters, but it should connect to a risk and a request in your report.'}]}
+];
+
+/* ---------- state ---------- */
+var app = document.getElementById('app'), homeBtn = document.getElementById('homeBtn');
+var co, st, phase, si, qi, qs, bottom = '', meters, armed = false;
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function clamp(n){ return Math.max(0, Math.min(100, n)); }
+function shuffle(a){ for(var q=a.length-1;q>0;q--){ var w=Math.floor(Math.random()*(q+1)), t=a[q]; a[q]=a[w]; a[w]=t; } return a; }
+function grade(c){ return c.g ? T(c.g, co) : null; }
+function askLinked(id, s){ var c = card(id); return c.supports.some(function(r){ return (s||st).risk.indexOf(r)>=0; }); }
+function money(k){ return k>=1000 ? '$'+parseFloat((k/1000).toFixed(2))+'M' : '$'+k+'K'; }
+function askTotal(s){ return (s||st).ask.reduce(function(a,id){ return a + card(id).cost; }, 0); }
+function tagHTML(c){ return '<span class="tag">'+esc(c.tag)+'</span>'+(COURSE ? '<span class="tag mod">'+(c.m.length>1?'Modules ':'Module ')+c.m.join(', ')+'</span>' : ''); }
+function tagText(c){ return c.tag + (COURSE ? ' (Module'+(c.m.length>1?'s ':' ')+c.m.join(', ')+')' : ''); }
+
+function intro(){
+  homeBtn.hidden = true; phase = 'intro';
+  var h = '<section class="intro"><div><span class="eyebrow">About 15 to 20 minutes</span><h2>Ten minutes with the audit committee.</h2><p class="lede">You\'re 90 days into the job as CISO. The board\'s audit committee meets Thursday, and it wants your report on the state of the security and privacy program. You get one page and ten minutes. What goes in, and what stays out?</p><div class="row"><button class="primary" id="go">Start a random scenario</button><span class="note">Each play picks one of three companies.</span></div></div>'+
+  '<aside class="rules"><h3>How it works</h3><ul><li><b>Read the room:</b> the company, its year and the three directors you\'ll face.</li><li><b>Build the report:</b> six sections with limited slots. Choose the framing, three risks, four metrics, what changed, privacy, and your ask.</li><li><b>Q&amp;A:</b> three directors\' questions, chosen by what you included and what you left out.</li><li><b>Outcome:</b> board confidence, your credibility, and how much of your ask was approved, then a section-by-section debrief.</li></ul><p class="note" style="margin:10px 0 0">Everything stays in your browser. Nothing you choose or type is stored or sent anywhere.</p></aside></section>'+
+  '<section class="sec"><h3>Or pick a company</h3><div class="cases">';
+  C.forEach(function(c,i){ h += '<button class="case" data-i="'+i+'"><span class="tag">'+esc(c.tag)+'</span><h3>'+esc(c.name)+'</h3><p>'+esc(c.sector)+'</p><p>'+esc(c.blurb)+'</p></button>'; });
+  h += '</div><p class="note" style="margin-top:14px">The companies and directors are invented, and the companies are the same three as in <i>The 2AM Page</i>, <i>Keys to the Agent</i> and <i>Ship It?</i>.'+(COURSE?' Course mode is on: cards show ITAO 511 module numbers.':'')+'</p></section>';
+  var ck = ReportKit.checker(CODE, replay); h += ck.html;
+  app.innerHTML = h; ck.wire();
+  document.getElementById('go').onclick = function(){ start(Math.floor(Math.random()*C.length)); };
+  [].forEach.call(app.querySelectorAll('.case'), function(b){ b.onclick = function(){ start(+b.getAttribute('data-i')); }; });
+  window.scrollTo(0,0);
+}
+
+function begin(i){
+  co = C[i]; phase = 'brief'; si = 0; qi = 0; qs = []; bottom = '';
+  st = {frame:null, risk:[], metric:[], change:[], privacy:[], ask:[], ans:[]};
+  meters = {conf:50, cred:50};
+  homeBtn.hidden = false;
+}
+function start(i){ SEC.forEach(function(s){ s.order = null; }); begin(i); brief(); }
+
+function rail(){
+  var h = '<aside class="rail"><div class="board"><div class="eyebrow">Your report</div><div class="co" style="margin-top:6px">'+esc(co.name)+'</div><div class="co-sub">'+esc(co.sector)+'</div><ol class="outline">';
+  SEC.forEach(function(s){
+    var picks = s.id==='frame' ? (st.frame?[st.frame]:[]) : st[s.id];
+    var done = picks.length >= s.min && (s.id!=='ask' || phase!=='build' || SEC.indexOf(s) < si);
+    h += '<li class="'+(phase==='build' && SEC[si]===s?'now':'')+'"><span>'+esc(s.title)+'</span>';
+    if(picks.length){ h += '<ul>'; picks.forEach(function(id){ var c = card(id); h += '<li>'+esc(shortOf(T(c.t,co)))+(c.cost?' <b>$'+c.cost+'K</b>':'')+'</li>'; }); h += '</ul>'; }
+    h += '</li>';
+  });
+  h += '</ol>';
+  if(phase==='qa' || phase==='done') h += meterHTML('conf')+meterHTML('cred');
+  return h + '</div><div class="board"><h3>The committee</h3><ul class="dirs">'+co.dirs.map(function(d){ return '<li><b>'+esc(d[0])+'</b> <span class="note">'+esc(d[1])+'</span></li>'; }).join('')+'</ul></div></aside>';
+}
+var ML = {conf:'Board confidence', cred:'Your credibility'};
+function meterHTML(k){
+  var v = meters[k], col = v>=60?'var(--good)':v<40?'var(--red)':'var(--amber)';
+  return '<div class="meter"><div class="lab"><span>'+ML[k]+'</span><b>'+v+'</b></div><div class="bar" role="progressbar" aria-label="'+ML[k]+'" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+v+'"><i style="width:'+v+'%;background:'+col+'"></i></div></div>';
+}
+function shortOf(t){ var s = t.split(/[.:;(]/)[0].trim(); return s.length>64 ? s.slice(0,62)+'…' : s; }
+function progress(){
+  var h = '<div class="progress" aria-hidden="true">', n = SEC.length + 3, idx = phase==='build' ? si : phase==='qa' ? SEC.length + qi : phase==='brief' ? -1 : n;
+  for(var k=0;k<n;k++) h += '<span class="'+(k<idx?'done':k===idx?'now':'')+(k>=SEC.length?' live':'')+'"></span>';
+  return h + '</div>';
+}
+
+function brief(){
+  phase = 'brief';
+  var h = '<div class="game"><section class="scene"><div class="scene-head"><span class="clock">Monday · the briefing</span><span class="step">Read the room</span></div><div class="scene-body"><h2>'+esc(co.name)+'</h2><p>'+esc(co.year)+'</p><p>The audit committee meets Thursday. You have one page and ten minutes on the agenda, and three directors who will each ask what they care about.</p><div class="dirgrid">';
+  co.dirs.forEach(function(d){ h += '<div class="dir"><span class="eyebrow">'+esc(d[1])+'</span><h3>'+esc(d[0])+'</h3><p>'+esc(d[2])+'</p></div>'; });
+  h += '</div><p class="note">Your briefing packet has far more in it than fits on a page, good news and bad, with some noise mixed in. Every card you see next comes from it.</p><button class="primary" id="begin">Start building the report</button></div>'+progress()+'</section>'+rail()+'</div>';
+  app.innerHTML = h;
+  document.getElementById('begin').onclick = function(){ phase = 'build'; si = 0; build(); };
+  window.scrollTo(0,0);
+}
+
+function picksOf(s){ return s.id==='frame' ? (st.frame?[st.frame]:[]) : st[s.id]; }
+function build(){
+  var s = SEC[si], picks = picksOf(s);
+  var h = '<div class="game"><section class="scene"><div class="scene-head"><span class="clock">Section '+s.n+' of '+SEC.length+'</span><span class="step">'+esc(s.ask)+'</span></div><div class="scene-body"><h2>'+esc(s.title)+'</h2>';
+  if(s.id==='ask') h += '<p>Each request should point to one of your three risks, or it reads as a wish list. You can also ask for nothing, but a board will usually ask what you need.</p><p class="budget">Requested: <b id="tot">$'+askTotal()+'K</b> of $'+CAP+'K</p>';
+  h += '<div class="cardgrid" role="group" aria-label="'+esc(s.title)+'">';
+  var order = s.order || (s.order = shuffle(s.cards.map(function(_,j){ return j; })));
+  order.forEach(function(j){ var c = s.cards[j], on = picks.indexOf(c.id)>=0;
+    var link = '';
+    if(s.id==='ask'){ var rs = c.supports.filter(function(r){ return st.risk.indexOf(r)>=0; }); link = '<span class="cost">$'+c.cost+'K</span>'+(rs.length?'<span class="link ok">Supports your risk '+rs.map(function(r){ return st.risk.indexOf(r)+1; }).join(' and ')+'</span>':'<span class="link no">Not tied to your top risks</span>'); }
+    h += '<button class="pick'+(on?' on':'')+'" data-id="'+c.id+'" aria-pressed="'+on+'"><span class="tags">'+tagHTML(c)+'</span><span class="pt">'+esc(T(c.t,co))+'</span>'+link+'</button>'; });
+  h += '</div>';
+  if(si===SEC.length-1) h += '<label class="bl">Your bottom line for the board, in one or two sentences <span class="note">(optional; printed at the top of your PDF; not part of the run code)</span><textarea id="bl" maxlength="300" rows="3" placeholder="For example: our biggest exposure is…">'+esc(bottom)+'</textarea><span class="note" id="blc"></span></label>';
+  h += '<div class="row"><button class="primary" id="next" '+(ready(s)?'':'disabled')+'>'+(si===SEC.length-1?'Present the report':'Next section')+'</button>'+(si>0?'<button class="linkbtn" id="back">Back</button>':'')+'<span class="note" id="msg">'+status(s)+'</span></div></div>'+progress()+'</section>'+rail()+'</div>';
+  app.innerHTML = h;
+  [].forEach.call(app.querySelectorAll('.pick'), function(b){ b.onclick = function(){ toggle(s, b.getAttribute('data-id')); }; });
+  var bl = document.getElementById('bl'); if(bl){ var cnt = function(){ bottom = bl.value.replace(/[\u0000-\u001f]/g,' ').slice(0,300); document.getElementById('blc').textContent = bottom.length+' of 300 characters'; }; bl.oninput = cnt; cnt(); }
+  document.getElementById('next').onclick = function(){ if(!ready(s)) return; si++; if(si<SEC.length) build(); else { qaStart(); } };
+  var bk = document.getElementById('back'); if(bk) bk.onclick = function(){ si--; build(); };
+  window.scrollTo(0,0);
+}
+function ready(s){ var n = picksOf(s).length; return n>=s.min && n<=s.max && (!s.budget || askTotal()<=CAP); }
+function status(s){
+  var n = picksOf(s).length;
+  if(s.budget) return askTotal()>CAP ? 'Over budget. Remove something.' : (n ? n+' request'+(n>1?'s':'')+'.' : 'No requests yet.');
+  if(s.min===s.max) return n+' of '+s.max+' chosen.';
+  return n+' chosen (pick '+s.min+' or '+s.max+').';
+}
+function toggle(s, id){
+  if(s.id==='frame'){ st.frame = id; }
+  else { var a = st[s.id], k = a.indexOf(id);
+    if(k>=0) a.splice(k,1);
+    else { if(s.budget && askTotal()+card(id).cost>CAP){ document.getElementById('msg').textContent = 'That would go over $'+CAP+'K. Remove something first.'; return; }
+      if(a.length>=s.max){ if(s.max===1) a.length = 0; else { document.getElementById('msg').textContent = 'You can only pick '+s.max+'. Remove one first.'; return; } }
+      a.push(id); } }
+  if(s.id==='risk'){ st.ask = st.ask.filter(function(){ return true; }); }
+  build();
+}
+
+/* ---------- scoring the report ---------- */
+function scoreReport(){
+  meters = {conf:50, cred:50};
+  var all = [st.frame].concat(st.risk, st.metric, st.change, st.privacy);
+  all.forEach(function(id){ var f = FX[grade(card(id))]; meters.conf = clamp(meters.conf + f.conf); meters.cred = clamp(meters.cred + f.cred); });
+  var ag = askGrade(); var f = FX[ag.g]; meters.conf = clamp(meters.conf + f.conf); meters.cred = clamp(meters.cred + f.cred);
+}
+function askGrade(){
+  if(!st.ask.length) return {g:'poor', l:'You asked for nothing. Boards expect the CISO to say what\'s needed; leaving it out makes the risks sound either solved or hopeless.'};
+  var un = st.ask.filter(function(id){ return !askLinked(id); });
+  if(un.length) return {g:'poor', l:'At least one request isn\'t tied to any of your top risks, so the ask reads as a wish list.'};
+  if(askTotal() < CAP*0.5) return {g:'ok', l:'Every request ties to a risk, but you asked for less than half of what was available. Make sure the ask matches the size of the risks you described.'};
+  return {g:'best', l:'Every request ties to one of your top risks, so each one has a reason the board can weigh.'};
+}
+function funding(){
+  // Linked requests are approved; with low credibility the board defers the largest one.
+  var linked = st.ask.filter(function(id){ return askLinked(id); }).slice();
+  if(meters.cred < 45 && linked.length){ linked.sort(function(a,b){ return card(b).cost - card(a).cost; }); linked.shift(); }
+  return {approved: linked, total: linked.reduce(function(a,id){ return a + card(id).cost; }, 0)};
+}
+
+/* ---------- Q&A ---------- */
+function pickQs(){ var out = []; for(var k=0;k<QA.length && out.length<3;k++) if(QA[k].when(st)) out.push(QA[k]); return out; }
+function qaStart(){ scoreReport(); qs = pickQs(); qi = 0; phase = 'qa'; qa(); }
+function qa(){
+  var q = qs[qi], d = co.dirs[q.who];
+  var h = '<div class="game"><section class="scene"><div class="scene-head"><span class="clock">Thursday · Q&amp;A</span><span class="step">Question '+(qi+1)+' of '+qs.length+'</span></div><div class="scene-body"><span class="eyebrow">'+esc(d[0])+' · '+esc(d[1])+'</span><div class="inject" style="margin-top:8px">"'+esc(q.q(st, co))+'"</div><p class="ask">How do you answer?</p><div class="choices">';
+  shuffle(q.a.map(function(_,j){ return j; })).forEach(function(j,n){ h += '<button class="choice" data-j="'+j+'"><span class="k">'+String.fromCharCode(65+n)+'</span><span>'+esc(q.a[j].t)+'</span></button>'; });
+  h += '</div><div id="res"></div></div>'+progress()+'</section>'+rail()+'</div>';
+  app.innerHTML = h;
+  [].forEach.call(app.querySelectorAll('.choice'), function(b){ b.onclick = function(){ answer(+b.getAttribute('data-j')); }; });
+  window.scrollTo(0,0);
+}
+var QFX = {best:{conf:8,cred:8}, ok:{conf:0,cred:2}, poor:{conf:-8,cred:-8}};
+function applyAnswer(j){ var a = qs[qi].a[j]; st.ans.push(j); meters.conf = clamp(meters.conf + QFX[a.g].conf); meters.cred = clamp(meters.cred + QFX[a.g].cred); return a; }
+function answer(j){
+  var a = applyAnswer(j);
+  [].forEach.call(app.querySelectorAll('.choice'), function(b){ b.disabled = true; if(+b.getAttribute('data-j')===j) b.classList.add('picked'); });
+  var lab = a.g==='best'?'Strong answer':a.g==='ok'?'Partly right':'Costly answer', last = qi===qs.length-1;
+  var res = document.getElementById('res');
+  res.innerHTML = '<div class="result '+a.g+'" tabindex="-1"><span class="verdict">'+lab+'</span><p>'+esc(a.l)+'</p><button class="primary" id="next">'+(last?'See how it went':'Next question')+'</button></div>';
+  var tmp = document.createElement('div'); tmp.innerHTML = rail(); var r = app.querySelector('.rail'); if(r) r.innerHTML = tmp.querySelector('.rail').innerHTML;
+  var box = res.firstChild; box.focus({preventScroll:true}); box.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth', block:'nearest'});
+  document.getElementById('next').onclick = function(){ qi++; if(qi<qs.length) qa(); else end(); };
+}
+
+/* ---------- run code ---------- */
+var CODE = 'BRD1';
+function idx(s, id){ for(var j=0;j<s.cards.length;j++) if(s.cards[j].id===id) return j; return -1; }
+function runCode(){
+  var n = [C.indexOf(co), idx(sec('frame'), st.frame)];
+  ['risk','metric','change'].forEach(function(k){ st[k].forEach(function(id){ n.push(idx(sec(k), id)); }); });
+  n.push(st.privacy.length); st.privacy.forEach(function(id){ n.push(idx(sec('privacy'), id)); });
+  n.push(st.ask.length); st.ask.forEach(function(id){ n.push(idx(sec('ask'), id)); });
+  return ReportKit.encode(CODE, n.concat(st.ans));
+}
+function replay(n){
+  var p = 0; function nx(){ if(p>=n.length) throw 0; return n[p++]; }
+  try{
+    var ci = nx(); if(ci>=C.length) return false; begin(ci);
+    function take(k, count){ var s = sec(k), out = []; for(var q=0;q<count;q++){ var j = nx(); if(j>=s.cards.length || out.indexOf(s.cards[j].id)>=0) throw 0; out.push(s.cards[j].id); } return out; }
+    st.frame = take('frame',1)[0]; st.risk = take('risk',3); st.metric = take('metric',4); st.change = take('change',2);
+    var pc = nx(); if(pc<1 || pc>2) return false; st.privacy = take('privacy', pc);
+    var ac = nx(); if(ac>8) return false; st.ask = take('ask', ac); if(askTotal()>CAP) return false;
+    scoreReport(); qs = pickQs(); qi = 0; phase = 'qa';
+    if(n.length - p !== qs.length) return false;
+    for(qi=0; qi<qs.length; qi++){ var j = nx(); if(j>=qs[qi].a.length) return false; applyAnswer(j); }
+    end(true); return true;
+  }catch(e){ return false; }
+}
+
+/* ---------- outcome ---------- */
+function outcome(){
+  var f = funding(), c = meters.conf, r = meters.cred, title, sub;
+  if(c>=75 && r>=75){ title = 'They want you back next quarter'; sub = 'The committee left knowing your top risks, how you\'re measuring progress, what changed and what you need. That\'s what earns a seat at the table.'; }
+  else if(c>=55 && r>=55){ title = 'A solid first report'; sub = 'Most of what you put in front of the board earned its place, and a few choices cost you. Look at which sections drew the hard questions.'; }
+  else if(r>=45){ title = 'They\'ll want more next time'; sub = 'The board heard a lot of information and not enough judgment. Boards want a few risks in business terms, honest metrics with a trend, and a clear ask.'; }
+  else { title = 'A long ten minutes'; sub = 'Vanity metrics, technical risks or a wish list made the committee doubt the rest of the report. The good news is that this is the cheapest place to learn it.'; }
+  return {title:title, sub:sub, f:f};
+}
+function sectionEntries(){
+  var out = [];
+  SEC.forEach(function(s){
+    if(s.id==='ask'){ var ag = askGrade(), f = funding();
+      out.push({sec:s, head:s.n+'. '+s.title, grade:ag.g, picks:st.ask.map(function(id){ var c = card(id); return {c:c, text:T(c.t,co)+' ($'+c.cost+'K)'+(f.approved.indexOf(id)>=0?': approved':askLinked(id)?': deferred':': not tied to a risk'), why:c.why}; }), note:ag.l});
+      return; }
+    picksOf(s).forEach(function(id){ var c = card(id); out.push({sec:s, head:s.n+'. '+s.title, grade:grade(c), picks:[{c:c, text:T(c.t,co), why:c.why}]}); });
+  });
+  return out;
+}
+function end(rebuilt){
+  phase = 'done';
+  var o = outcome(), f = o.f, code = runCode();
+  var pn = ReportKit.panel({code:code, rebuilt:rebuilt, getDoc:report});
+  var h = '<div class="game"><section class="end"><span class="eyebrow">'+esc(co.name)+' · audit committee debrief</span><p class="rk-printname note" style="margin:4px 0 0"></p><h2>'+esc(o.title)+'</h2><p class="lede" style="max-width:62ch">'+esc(o.sub)+'</p>';
+  if(bottom) h += '<div class="inject"><span class="eyebrow">Your bottom line</span>'+esc(bottom)+'</div>';
+  h += '<div class="grid2"><div class="stat"><div class="n">'+meters.conf+'</div><div class="l">board confidence</div></div><div class="stat"><div class="n">'+meters.cred+'</div><div class="l">your credibility</div></div><div class="stat"><div class="n">'+money(f.total)+'</div><div class="l">approved, of '+money(askTotal())+' requested</div></div><div class="stat"><div class="n">'+sectionEntries().filter(function(e){ return e.grade==='best'; }).length+' / '+sectionEntries().length+'</div><div class="l">strong choices in the report</div></div></div>';
+  h += '<div class="sec"><h3>Your report, section by section</h3><div class="debrief">';
+  sectionEntries().forEach(function(e){
+    h += '<div class="dl '+e.grade+'"><div class="h"><span>'+esc(e.head)+'</span><span>'+G[e.grade]+'</span></div>';
+    if(!e.picks.length) h += '<p><b>You asked for nothing.</b></p>';
+    e.picks.forEach(function(p){ h += '<p><b>'+esc(p.text)+'</b> <span class="tags">'+tagHTML(p.c)+'</span></p><p class="lesson" style="margin:4px 0 0;font-size:14px;color:var(--muted)">'+esc(p.why)+'</p>'; });
+    if(e.note) h += '<p class="lesson" style="margin:6px 0 0;font-size:14px">'+esc(e.note)+'</p>';
+    h += '</div>'; });
+  h += '</div></div><div class="sec"><h3>The questions</h3><div class="debrief">';
+  qs.forEach(function(q,k){ var a = q.a[st.ans[k]], d = co.dirs[q.who];
+    h += '<div class="dl '+a.g+'"><div class="h"><span>'+esc(d[0])+'</span><span>'+(a.g==='best'?'Strong answer':a.g==='ok'?'Partly right':'Costly answer')+'</span></div><p>"'+esc(q.q(st, co))+'"</p><p><b>You said:</b> '+esc(a.t)+'</p><p class="lesson" style="margin:6px 0 0;font-size:14px;color:var(--muted)">'+esc(a.l)+'</p></div>'; });
+  h += '</div></div><div class="real"><h3>What a board wants to hear</h3><ul><li>The top risks, in business terms.</li><li>A few honest metrics, with a trend over time.</li><li>What changed since the last meeting.</li><li>What you need from them, whether that\'s money, people or a decision.</li></ul><p class="note" style="margin-top:8px">The companies, directors and numbers are invented. The patterns behind them come from real incidents and real boardrooms.</p></div>';
+  h += pn.html+'<div class="row"><button class="primary" id="again">Try another company</button><button class="linkbtn" id="same">Start over with this company</button></div></section>'+rail()+'</div>';
+  app.innerHTML = h; pn.wire();
+  var cur = C.indexOf(co);
+  document.getElementById('again').onclick = function(){ var k; do{ k = Math.floor(Math.random()*C.length); }while(k===cur && C.length>1); start(k); };
+  document.getElementById('same').onclick = function(){ start(cur); };
+  window.scrollTo(0,0);
+}
+function report(name){
+  var o = outcome(), f = o.f;
+  var secs = [];
+  secs.push({heading:'Your bottom line for the board', intro: bottom || '(None entered. The bottom line isn\'t part of the run code, so a rebuilt report never has one.)'});
+  secs.push({heading:'Your report, section by section', entries: sectionEntries().map(function(e){
+    return {head:e.head, tag:G[e.grade], grade:e.grade, chose: e.picks.length ? e.picks.map(function(p){ return p.text+' ['+tagText(p.c)+']'; }).join('; ') : 'Nothing requested.', lines: e.picks.map(function(p){ return p.why; }).concat(e.note?[e.note]:[])}; })});
+  secs.push({heading:'The questions', entries: qs.map(function(q,k){ var a = q.a[st.ans[k]], d = co.dirs[q.who];
+    return {head:d[0]+': "'+q.q(st, co)+'"', tag:(a.g==='best'?'Strong answer':a.g==='ok'?'Partly right':'Costly answer'), grade:a.g, chose:a.t, lines:[a.l]}; })});
+  secs.push({heading:'What a board wants to hear', bullets:['The top risks, in business terms.','A few honest metrics, with a trend over time.','What changed since the last meeting.','What you need from them, whether that\'s money, people or a decision.'], note:'The companies, directors and numbers are invented.'});
+  return {game:'The Board Report', kind:'Audit committee debrief', company:co.name, sector:co.sector, name:name, title:o.title, sub:o.sub, license:ReportKit.LICENSE,
+    stats:[{label:'Board confidence', value:meters.conf, better:'high', note:'higher is better'},{label:'Your credibility', value:meters.cred, better:'high', note:'higher is better'},
+           {label:'Funding approved, of '+money(askTotal())+' requested', value:money(f.total), bar:false}],
+    sections:secs,
+    verify:'To check this result, open The Board Report, choose "Check a result" on the start screen, and paste the run code. The game rebuilds the same report and answers, and the outcome should match this page. The bottom line is typed text, so it isn\'t part of the run code.'};
+}
+
+homeBtn.onclick = function(){
+  var inGame = phase==='build' || phase==='qa';
+  if(inGame && !armed){ armed = true; homeBtn.textContent = 'Leave this report?'; setTimeout(function(){ armed = false; homeBtn.textContent = 'New report'; }, 4000); return; }
+  armed = false; homeBtn.textContent = 'New report'; SEC.forEach(function(s){ s.order = null; }); intro();
+};
+intro();
+})();
+</script>
+</body>
+</html>
